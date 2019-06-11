@@ -1,0 +1,39 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.1.4.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+bootJar {
+    baseName = 'home-assognment'
+    version =  '1.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile(group: 'com.google.guava', name: 'guava', version: '18.0')
+    compile(group: 'org.springframework', name: 'spring-context-support', version: '4.1.7.RELEASE')
+    compile group: 'org.springframework.data', name: 'spring-data-jpa', version: '2.1.8.RELEASE'
+    compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '5.4.3.Final'
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.13'
+    compile group: 'com.h2database', name: 'h2', version: '1.4.199'
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.1.0'
+
+}
