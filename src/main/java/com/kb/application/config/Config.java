@@ -1,6 +1,6 @@
 package com.kb.application.config;
 
-import com.kb.application.RootElementFoundException;
+import com.kb.application.exceptions.RootElementFoundException;
 import com.kb.application.utils.FileSearcher;
 import com.kb.application.utils.XmlReader;
 import org.dom4j.ElementHandler;

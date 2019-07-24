@@ -1,6 +1,6 @@
 package com.kb.application.utils;
 
-import com.kb.application.RootElementFoundException;
+import com.kb.application.exceptions.RootElementFoundException;
 import org.dom4j.io.SAXReader;
 
 import java.io.File;
