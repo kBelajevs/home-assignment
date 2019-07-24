@@ -1,40 +1,48 @@
 package com.kb.application.config;
 
-import com.google.common.cache.CacheBuilder;
-import org.springframework.cache.Cache;
-import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.guava.GuavaCache;
+import com.kb.application.RootElementFoundException;
+import com.kb.application.utils.FileSearcher;
+import com.kb.application.utils.XmlReader;
+import org.dom4j.ElementHandler;
+import org.dom4j.ElementPath;
+import org.dom4j.io.SAXReader;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.concurrent.TimeUnit;
+import static com.kb.application.utils.InfoLogger.logRootTag;
 
 @Configuration
-@EnableCaching
-@ComponentScan(basePackages = {"com.kb.application"})
 public class Config {
 
-    public static final String GEOLOCATION_CACHE = "geolocation";
-    public static final String WEATHER_CACHE = "weather";
+    @Value("${directory}")
+    private String directory;
 
-    @Bean(GEOLOCATION_CACHE)
-    public Cache geolocationCache() {
-        return new GuavaCache(GEOLOCATION_CACHE, CacheBuilder.newBuilder()
-                .expireAfterWrite(1, TimeUnit.DAYS)
-                .build());
-    }
+    private SAXReader saxReader() {
+        SAXReader reader = new SAXReader();
+        reader.setDefaultHandler(
+                new ElementHandler() {
+                    public void onStart(ElementPath path) {
+                        logRootTag(path);
+                        throw new RootElementFoundException();
+                    }
 
-    @Bean(WEATHER_CACHE)
-    public Cache weatherCache() {
-        return new GuavaCache(WEATHER_CACHE, CacheBuilder.newBuilder()
-                .expireAfterWrite(5, TimeUnit.HOURS)
-                .build());
+                    public void onEnd(ElementPath path) {
+                    }
+                }
+        );
+
+        return reader;
     }
 
     @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
+    public FileSearcher fileSearcher() {
+        return new FileSearcher(directory);
     }
+
+    @Bean
+    public XmlReader xmlReader() {
+        return new XmlReader(saxReader());
+    }
+
 }
